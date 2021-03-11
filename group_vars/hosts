@@ -1,0 +1,17 @@
+[controller]
+
+[compute]
+
+[keystone]
+
+[glance]
+
+[mysql]
+
+[horizon]
+
+[nova-api]
+
+[neutron-server]
+
+[neutron]
