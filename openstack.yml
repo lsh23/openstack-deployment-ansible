@@ -5,6 +5,6 @@
 - include: services/keystone/keystone.yml
 - include: services/horizon/horizon.yml
 - include: services/glance/glance.yml
+- include: services/nova-api/nova-api.yml
 - include: services/neutron/neutron.yml
-- include: services/nova-api/main.yml
-- include: services/neutron-server/neutron.yml
+- include: services/neutron-server/neutron-server.yml
