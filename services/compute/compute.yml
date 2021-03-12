@@ -1,0 +1,53 @@
+---
+- name: setup compute
+  hosts: compute
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install nova-compute
+      apt: 
+        pkg: nova-compute
+        state: latest
+
+    - name: nova.conf
+      template: 
+        src: conf/nova.conf
+        dest: /etc/nova/nova.conf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: nova-compute.conf
+      template: 
+        src: conf/nova-compute.conf
+        dest: /etc/nova/nova-compute.conf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart nova-compute
+      service: 
+        name: nova-compute
+        state: restarted 
+
+    - name: install neutron-linuxbridge-agent
+      apt: 
+        pkg: neutron-linuxbridge-agent
+        state: latest 
+
+    - name: linuxbridge_agent.ini
+      template: 
+        src: conf/linuxbridge_agent.ini
+        dest: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+        owner: root 
+        group: root 
+        mode: 0644
+    
+    - name: neutron.conf
+      template: 
+        src: conf/neutron.conf
+        dest: /etc/neutron/neutron.conf
+        owner: root 
+        group: root 
+        mode: 0644
