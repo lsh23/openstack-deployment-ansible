@@ -1,0 +1,133 @@
+---
+- name: setup mysql
+  hosts: mysql
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install mariadb-server
+      apt: 
+        pkg: mariadb-server
+        state: latest
+
+    - name: install python-pymysql
+      apt: 
+        pkg: python-pymysql
+        state: latest
+
+    - name: 99-openstack.cnf
+      template: 
+        src: conf/99-openstack.cnf
+        dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart mysql
+      service: 
+        name: mysql
+        state: restarted 
+
+    - name: create keystone db
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: keystone
+        state: present
+
+    - name: create keystone user and grant keystone localhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: keystone
+        password: "{{ keystone_dbpass }}"
+        priv: 'keystone.*:ALL,GRANT'
+        state: present
+
+    - name: grant keystone anyhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: keystone
+        password: "{{ keystone_dbpass }}"
+        priv: 'keystone.*:ALL,GRANT'
+        host: '%'
+        state: present
+
+    - name: create glance db
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: glance
+        state: present
+
+    - name: create glance user and grant glance localhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: glance
+        password: "{{ glance_dbpass }}"
+        priv: 'glance.*:ALL,GRANT'
+        state: present
+
+    - name: grant glance anyhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: glance
+        password: "{{ glance_dbpass }}"
+        priv: 'glance.*:ALL,GRANT'
+        host: '%'
+        state: present
+
+    - name: create nova-api db
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: nova_api
+        state: present
+
+    - name: create nova db
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: nova
+        state: present
+
+    - name: create nova_cell0 db
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: nova_cell0
+        state: present
+
+    - name: create nova and grant nova localhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: nova
+        password: "{{ nova_dbpass }}"
+        priv: 'nova_api.*:ALL,GRANT/nova.*:ALL,GRANT/nova_cell0.*:ALL,GRANT'
+        state: present
+
+    - name: grant nova anyhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: nova
+        password: "{{ nova_dbpass }}"
+        priv: 'nova_api.*:ALL,GRANT/nova.*:ALL,GRANT/nova_cell0.*:ALL,GRANT'
+        host: '%'
+        state: present
+
+    - name: create neutron db
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: neutron
+        state: present
+
+    - name: create neutron user and grant neutron localhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: neutron
+        password: "{{ neutron_dbpass }}"
+        priv: 'neutron.*:ALL,GRANT'
+        state: present
+
+    - name: grant neutron anyhost
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: neutron
+        password: "{{ neutron_dbpass }}"
+        priv: 'neutron.*:ALL,GRANT'
+        host: '%'
+        state: present
