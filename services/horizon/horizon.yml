@@ -1,0 +1,33 @@
+---
+- name: setup horizon
+  hosts: horizon
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install python-pip
+      apt: 
+        pkg: python-pip
+        state: latest
+
+    - name: install openstack-dashboard
+      apt: 
+        pkg: openstack-dashboard
+        state: latest
+
+    - name: Install django 1.1
+      pip:
+        name: django == 1.11
+
+    - name: horizon conf
+      template: 
+        src: conf/controller-horizon-local_settings.py
+        dest: /etc/openstack-dashboard/local_settings.py
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart apache2
+      service: 
+        name: apache2
+        state: restarted 
