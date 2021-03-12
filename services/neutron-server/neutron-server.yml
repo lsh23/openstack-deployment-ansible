@@ -1,0 +1,37 @@
+---
+- name: setup neutron-server
+  hosts: neutron-server
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install neutron-server
+      apt: 
+        pkg: neutron-server
+        state: latest
+
+    - name: install neutron-plugin-ml2
+      apt: 
+        pkg: neutron-plugin-ml2
+        state: latest
+
+    - name: neutron.conf
+      template: 
+        src: conf/neutron.conf
+        dest: /etc/neutron/neutron.conf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: ml2_conf.ini
+      template: 
+        src: conf/ml2_conf.ini
+        dest: /etc/neutron/plugins/ml2/ml2_conf.ini
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart neutron-server
+      service: 
+        name: neutron-server
+        state: restarted 
