@@ -1,0 +1,44 @@
+---
+- name: setup nova-api
+  hosts: nova-api
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install nova-api
+      apt: 
+        pkg: nova-api
+        state: latest
+
+    - name: install nova-conductor
+      apt: 
+        pkg: nova-conductor
+        state: latest
+
+    - name: install nova-consoleauth
+      apt: 
+        pkg: nova-consoleauth
+        state: latest
+
+    - name: install nova-novncproxy
+      apt: 
+        pkg: nova-novncproxy
+        state: latest
+
+    - name: install nova-scheduler
+      apt: 
+        pkg: nova-scheduler
+        state: latest
+
+    - name: install nova-placement-api
+      apt: 
+        pkg: nova-placement-api
+        state: latest
+
+    - name: nova.conf
+      template: 
+        src: conf/nova.conf
+        dest: /etc/nova/nova.conf
+        owner: root 
+        group: root 
+        mode: 0644
