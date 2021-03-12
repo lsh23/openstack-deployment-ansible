@@ -1,0 +1,10 @@
+- include: services/common/common.yml
+- include: services/compute/compute.yml
+- include: services/controller/controller.yml
+- include: services/mysql/mysql.yml
+- include: services/keystone/keystone.yml
+- include: services/horizon/horizon.yml
+- include: services/glance/glance.yml
+- include: services/neutron/neutron.yml
+- include: services/nova-api/main.yml
+- include: services/neutron-server/neutron.yml
