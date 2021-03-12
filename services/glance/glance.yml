@@ -1,0 +1,38 @@
+---
+- name: setup glance
+  hosts: glance
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install glance
+      apt: 
+        pkg: glance
+        state: latest
+
+    - name: glance-api.conf
+      template: 
+        src: conf/glance-api.conf
+        dest: /etc/glance/glance-api.conf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart glance-api
+      service: 
+        name: glance-api
+        state: restarted 
+
+    - name: glance-registry.conf
+      template: 
+        src: conf/glance-registry.conf
+        dest: /etc/glance/glance-registry.conf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart glance-registry
+      service: 
+        name: glance-registry
+        state: restarted 
+
