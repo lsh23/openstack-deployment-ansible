@@ -1,0 +1,62 @@
+---
+- name: setup controller
+  hosts: controller
+  remote_user: root
+  gather_facts: True
+  tasks:
+
+    - name: install rabbitmq-server
+      apt: 
+        pkg: rabbitmq-server
+        state: latest
+
+    - rabbitmq_user:
+        user: openstack
+        password: "{{ rabbit_pass }}"
+        vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+        state: present
+
+    - name: install memcached
+      apt: 
+        pkg: memcached
+        state: latest
+
+    - name: install python-memcache
+      apt: 
+        pkg: python-memcache
+        state: latest
+
+    - name: memcached.conf
+      template: 
+        src: conf/memcached.conf
+        dest: /etc/memcached.conf
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart memcached
+      service: 
+        name: memcached
+        state: restarted 
+
+    - name: install etcd
+      apt: 
+        pkg: etcd
+        state: latest
+
+    - name: etcd conf
+      template: 
+        src: conf/etcd
+        dest: /etc/default/etcd
+        owner: root 
+        group: root 
+        mode: 0644
+
+    - name: restart etcd
+      service: 
+        name: etcd
+        state: restarted 
+
